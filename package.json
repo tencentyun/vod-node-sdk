@@ -1,0 +1,31 @@
+{
+  "name": "vod-node-sdk",
+  "version": "1.0.0",
+  "description": "vod node sdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tencentyun/vod-node-sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/tencentyun/vod-node-sdk/issues"
+  },
+  "homepage": "https://github.com/tencentyun/vod-node-sdk#readme",
+  "keywords": [
+    "tencent cloud",
+    "vod-sdk",
+    "vod-node-sdk"
+  ],
+  "author": "jianguoxu",
+  "license": "MIT",
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.5.6",
+    "tencentcloud-sdk-nodejs": "^3.0.42"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
+}
