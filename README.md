@@ -16,7 +16,7 @@ client = new VodUploadClient("your secretId", "your secretKey");
 let req = new VodUploadRequest();
 req.MediaFilePath = "/data/file/Wildlife.mp4";
 req.CoverFilePath = "/data/file/Wildlife-cover.png";
-client.upload(region, req, function (err, data) {
+client.upload("ap-guangzhou", req, function (err, data) {
     if (err) {
         // 处理业务异常
         console.log(err)
