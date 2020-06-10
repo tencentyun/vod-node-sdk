@@ -27,7 +27,7 @@ npm i vod-node-sdk --save
 SDK 提供了丰富的测试用例，开发者可以参考示例的调用方式，具体参考：[测试用例](https://github.com/tencentyun/vod-node-sdk/blob/master/test/test_upload.js)。
 开发者可以通过运行命令查看测试用例的执行情况：
 ```xml
-mvn test
+npm test
 ```
 
 ## 变更记录
