@@ -76,7 +76,7 @@ describe('upload', function () {
         req.CoverFilePath = path.join(__dirname, "Wildlife-cover.png");
         req.MediaType = "test";
         client.upload(region, req, function (err) {
-            if (err.message === "invalid video type") {
+            if (err.message === "invalid media type") {
                 done();
             } else {
                 done(err);
@@ -160,6 +160,42 @@ describe('upload', function () {
         req.MediaFilePath = path.join(__dirname, "Wildlife.mp4");
         req.CoverFilePath = path.join(__dirname, "Wildlife-cover.png");
         req.MediaName = "test_test";
+        client.upload(region, req, function (err, data) {
+            if (err) {
+                done(err);
+            }
+            if (data.FileId) {
+                console.log(data.FileId);
+                done();
+            } else {
+                done(data);
+            }
+        });
+    });
+
+    it('upload simple hls', function (done) {
+        this.timeout(10000);
+        let req = new VodUploadRequest();
+        req.MediaFilePath = path.join(__dirname, "hls", "prog_index.m3u8");
+        req.MediaName = "test_hls";
+        client.upload(region, req, function (err, data) {
+            if (err) {
+                done(err);
+            }
+            if (data.FileId) {
+                console.log(data.FileId);
+                done();
+            } else {
+                done(data);
+            }
+        });
+    });
+
+    it('upload master playlist', function (done) {
+        this.timeout(20000);
+        let req = new VodUploadRequest();
+        req.MediaFilePath = path.join(__dirname, "hls", "bipbopall.m3u8");
+        req.MediaName = "test_master_playlist";
         client.upload(region, req, function (err, data) {
             if (err) {
                 done(err);
