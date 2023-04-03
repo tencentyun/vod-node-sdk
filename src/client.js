@@ -66,6 +66,7 @@ class VodUploadClient {
                 let mediaFileDir = path.dirname(request.MediaFilePath);
                 let segmentRelativeFilePath = segmentFilePath.substring(mediaFileDir.length).replace(/\\/g, '/');
                 let segmentStoragePath = path.join(storageDir, segmentRelativeFilePath);
+                segmentStoragePath = segmentStoragePath.replace(/\\/g, '/');
                 await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, segmentStoragePath, segmentFilePath, onProgress);
             }
         }
