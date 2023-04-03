@@ -18,11 +18,11 @@ class VodUploadClient {
         this.ignoreCheck = false;
     }
 
-    upload(region, request, callback) {
-        this.handleUpload(region, request).then(data => callback(null, data)).catch(err => callback(err, null));
+    upload(region, request, callback, onProgress=null) {
+        this.handleUpload(region, request, onProgress).then(data => callback(null, data)).catch(err => callback(err, null));
     }
 
-    async handleUpload(region, request) {
+    async handleUpload(region, request, onProgress) {
         const cred = new Credential(this.secretId, this.secretKey, this.token);
         const cloudClient = new VodClient(cred, region);
 
@@ -55,10 +55,10 @@ class VodUploadClient {
         }
 
         if (StringUtil.isNotEmpty(request.MediaType) && StringUtil.isNotEmpty(applyUploadResponse.MediaStoragePath)) {
-            await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, applyUploadResponse.MediaStoragePath, request.MediaFilePath);
+            await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, applyUploadResponse.MediaStoragePath, request.MediaFilePath, onProgress);
         }
         if (StringUtil.isNotEmpty(request.CoverType) && StringUtil.isNotEmpty(applyUploadResponse.CoverStoragePath)) {
-            await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, applyUploadResponse.CoverStoragePath, request.CoverFilePath);
+            await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, applyUploadResponse.CoverStoragePath, request.CoverFilePath, onProgress);
         }
         if (segmentFilePathList.length > 0) {
             for (const segmentFilePath of segmentFilePathList) {
@@ -66,7 +66,7 @@ class VodUploadClient {
                 let mediaFileDir = path.dirname(request.MediaFilePath);
                 let segmentRelativeFilePath = segmentFilePath.substring(mediaFileDir.length).replace(/\\/g, '/');
                 let segmentStoragePath = path.join(storageDir, segmentRelativeFilePath);
-                await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, segmentStoragePath, segmentFilePath);
+                await this.cosUpload(cosClient, applyUploadResponse.StorageBucket, applyUploadResponse.StorageRegion, segmentStoragePath, segmentFilePath, onProgress);
             }
         }
 
@@ -76,14 +76,15 @@ class VodUploadClient {
         return await this.commitUpload(cloudClient, commitUploadRequest);
     }
 
-    cosUpload(cosClient, bucket, region, key, filePath) {
+    cosUpload(cosClient, bucket, region, key, filePath, onProgress) {
         return new Promise(
             (resolve, reject) => {
                 cosClient.sliceUploadFile({
                     Bucket: bucket,
                     Region: region,
                     Key: key,
-                    FilePath: filePath
+                    FilePath: filePath,
+                    onProgress: onProgress,
                 }, function (err) {
                     if (err) {
                         reject(err);
