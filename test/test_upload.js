@@ -116,6 +116,27 @@ describe('upload', function () {
         });
     });
 
+    it('upload with progress callback', function (done) {
+        this.timeout(10000);
+        let req = new VodUploadRequest();
+        req.MediaFilePath = path.join(__dirname, "Wildlife.mp4");
+        req.CoverFilePath = path.join(__dirname, "Wildlife-cover.png");
+        client.upload(region, req, function (err, data) {
+            if (err) {
+                done(err);
+            }
+            if (data.FileId) {
+                console.log(data.FileId);
+                done();
+            } else {
+                done(data);
+            }
+        },
+        function (progressData) {
+            console.log(JSON.stringify(progressData));
+        });
+    });
+
     it('upload with Procedure', function (done) {
         this.timeout(10000);
         let req = new VodUploadRequest();
